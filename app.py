@@ -94,9 +94,18 @@ def add_task():
         mongo.db.tasks.insert_one(task)
         flash('Your new task has been added!')
         return redirect('get_tasks')
-        
+
     categories = mongo.db.categories.find().sort("category_name", 1) # sort by ascending
     return render_template('add_task.html', categories=categories)
+
+
+@app.route('/edit_task/<task_id>', methods=['GET', 'POST'])
+def edit_task(task_id):
+    task = mongo.db.tasks.find_one({'_id': ObjectId(task_id)})
+
+    categories = mongo.db.categories.find().sort("category_name", 1) # sort by ascending
+    return render_template('edit_task.html', task=task, categories=categories)
+
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
